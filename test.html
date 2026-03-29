@@ -16,8 +16,13 @@ header h1{font-size:22px;font-weight:600;color:#2d6a4f}
 .btn-primary{background:#2d6a4f;color:#fff}.btn-primary:hover{background:#1e4d38}
 .btn-secondary{background:#f0f0f0;color:#444}.btn-secondary:hover{background:#e0e0e0}
 .btn-outline{background:#fff;color:#2d6a4f;border:1.5px solid #2d6a4f}.btn-outline:hover{background:#eaf5ef}
+.btn-danger{background:#dc2626;color:#fff}.btn-danger:hover{background:#b91c1c}
+.btn-sm{padding:4px 10px;font-size:12px}
 .card{background:#fff;border-radius:12px;padding:16px;margin-bottom:12px;border:1px solid #e8e8e8}
-.course-card{cursor:pointer;transition:all .15s}.course-card:hover{border-color:#2d6a4f;box-shadow:0 2px 8px rgba(45,106,79,.12)}
+.course-card{cursor:pointer;transition:all .15s;position:relative}.course-card:hover{border-color:#2d6a4f;box-shadow:0 2px 8px rgba(45,106,79,.12)}
+.course-delete-btn{position:absolute;top:12px;right:12px;background:#fff;border:1.5px solid #dc2626;color:#dc2626;padding:4px 10px;border-radius:6px;font-size:12px;cursor:pointer;opacity:0;transition:all .15s;z-index:10}
+.course-card:hover .course-delete-btn{opacity:1}
+.course-delete-btn:hover{background:#fef2f2}
 .badge{display:inline-block;padding:2px 8px;border-radius:20px;font-size:11px;font-weight:600;background:#d1fae5;color:#065f46}
 .progress-bar{height:6px;background:#e0e0e0;border-radius:3px;overflow:hidden;margin-top:6px}
 .progress-fill{height:100%;background:#2d6a4f;border-radius:3px;transition:width .3s}
@@ -192,7 +197,6 @@ header h1{font-size:22px;font-weight:600;color:#2d6a4f}
   </div>
 </div>
 
-<!-- ★ ここを修正：pre/code で安全に表示 ★ -->
 <div id="import-format" style="display:none">
   <p style="font-size:13px;color:#444;font-weight:500;margin-bottom:6px">リスニング問題の音声指定方法</p>
 
@@ -222,8 +226,6 @@ header h1{font-size:22px;font-weight:600;color:#2d6a4f}
   </p>
 </div>
 
-<div id="import-error" style="display:none;color:#dc2626;font-size:13px;padding:8px;background:#fef2f2;border-radius:6px;margin-top:8px"></div>
-
     <div id="import-error" style="display:none;color:#dc2626;font-size:13px;padding:8px;background:#fef2f2;border-radius:6px;margin-top:8px"></div>
     <div style="margin-top:16px;text-align:right">
       <button class="btn btn-secondary" onclick="closeImport()">閉じる</button>
@@ -231,9 +233,25 @@ header h1{font-size:22px;font-weight:600;color:#2d6a4f}
   </div>
 </div>
 
+<!-- DELETE CONFIRMATION MODAL -->
+<div id="modal-delete-confirm" class="modal" style="display:none">
+  <div class="modal-box" style="max-width:400px">
+    <div class="modal-title">🗑️ コースを削除</div>
+    <p style="margin-bottom:16px;color:#666;line-height:1.6">
+      「<strong id="delete-course-name"></strong>」を削除してもよろしいですか？<br>
+      <span style="font-size:13px;color:#dc2626">※ 学習進捗データも一緒に削除されます</span>
+    </p>
+    <div style="display:flex;gap:8px;justify-content:flex-end">
+      <button class="btn btn-secondary" onclick="closeDeleteConfirm()">キャンセル</button>
+      <button class="btn btn-danger" onclick="confirmDelete()">削除する</button>
+    </div>
+  </div>
+</div>
+
 <script>
 let courses=[], progress={}, currentCourse=null, currentLesson=null, currentQ=0, answers=[];
 let currentAudio=null;
+let deleteTargetIndex=null;
 
 // ====== COOKIE UTILITIES ======
 function setCookie(name, value, days = 365) {
@@ -385,6 +403,38 @@ function showAudioError(btnId,msg){
   if(el){el.textContent=msg;el.style.display='block'}
 }
 
+// ====== DELETE COURSE ======
+function requestDeleteCourse(index, event) {
+  event.stopPropagation();
+  deleteTargetIndex = index;
+  document.getElementById('delete-course-name').textContent = courses[index].name;
+  document.getElementById('modal-delete-confirm').style.display = 'flex';
+}
+
+function closeDeleteConfirm() {
+  document.getElementById('modal-delete-confirm').style.display = 'none';
+  deleteTargetIndex = null;
+}
+
+function confirmDelete() {
+  if (deleteTargetIndex !== null) {
+    const courseId = courses[deleteTargetIndex].id;
+    
+    // コースを削除
+    courses.splice(deleteTargetIndex, 1);
+    saveCourses();
+    
+    // 進捗データも削除
+    if (progress[courseId]) {
+      delete progress[courseId];
+      saveProgress();
+    }
+    
+    closeDeleteConfirm();
+    renderHome();
+  }
+}
+
 // ====== HOME ======
 function renderHome(){
   const list=document.getElementById('course-list');
@@ -396,6 +446,7 @@ function renderHome(){
     const done=c.lessons.filter(l=>prog[l.id]?.completed).length;
     const pct=c.lessons.length?Math.round(done/c.lessons.length*100):0;
     return`<div class="card course-card" onclick="openCourse(${i})">
+      <button class="course-delete-btn" onclick="requestDeleteCourse(${i}, event)">🗑️ 削除</button>
       <div style="display:flex;align-items:center;gap:10px">
         <div style="font-size:28px">${c.icon||'📖'}</div>
         <div style="flex:1">
