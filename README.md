@@ -9,7 +9,8 @@ GitHub Pages版: https://taichi1129.github.io/LinguaLeaf/
 
 ## コースの作り方
 LLC(Learn Language Course)ファイルを使用します。
-拡張子は.llcですが、.jsonとしても正常に動作します。
+拡張子は.llcですが、.jsonでも正常に動作します。
+中身はJSON構文です。
 
 例:
 `````LLC
