@@ -1,0 +1,519 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>LinguaLeaf</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:sans-serif;background:#f5f7fa;color:#222;min-height:100vh}
+#app{max-width:720px;margin:0 auto;padding:16px}
+.screen{display:none}
+.screen.active{display:block}
+header{display:flex;align-items:center;gap:10px;margin-bottom:20px;padding-bottom:12px;border-bottom:1px solid #e0e0e0}
+header h1{font-size:22px;font-weight:600;color:#2d6a4f}
+.logo{width:32px;height:32px;background:#2d6a4f;border-radius:8px;display:flex;align-items:center;justify-content:center;color:#fff;font-size:16px;font-weight:700}
+.btn{display:inline-flex;align-items:center;gap:6px;padding:8px 16px;border-radius:8px;border:none;cursor:pointer;font-size:14px;font-weight:500;transition:all .15s}
+.btn-primary{background:#2d6a4f;color:#fff}
+.btn-primary:hover{background:#1e4d38}
+.btn-secondary{background:#f0f0f0;color:#444}
+.btn-secondary:hover{background:#e0e0e0}
+.btn-outline{background:#fff;color:#2d6a4f;border:1.5px solid #2d6a4f}
+.btn-outline:hover{background:#eaf5ef}
+.btn-danger{background:#fee2e2;color:#991b1b}
+.btn-danger:hover{background:#fecaca}
+.card{background:#fff;border-radius:12px;padding:16px;margin-bottom:12px;border:1px solid #e8e8e8}
+.course-card{cursor:pointer;transition:all .15s}
+.course-card:hover{border-color:#2d6a4f;box-shadow:0 2px 8px rgba(45,106,79,.12)}
+.badge{display:inline-block;padding:2px 8px;border-radius:20px;font-size:11px;font-weight:600;background:#d1fae5;color:#065f46}
+.progress-bar{height:6px;background:#e0e0e0;border-radius:3px;overflow:hidden;margin-top:6px}
+.progress-fill{height:100%;background:#2d6a4f;border-radius:3px;transition:width .3s}
+.tab-bar{display:flex;gap:4px;margin-bottom:16px;background:#f0f0f0;padding:4px;border-radius:10px}
+.tab{flex:1;text-align:center;padding:7px;border-radius:7px;cursor:pointer;font-size:13px;font-weight:500;color:#666;transition:all .15s}
+.tab.active{background:#fff;color:#2d6a4f;box-shadow:0 1px 4px rgba(0,0,0,.08)}
+.activity-card{background:#fff;border-radius:12px;padding:20px;border:1px solid #e8e8e8;margin-bottom:12px}
+.activity-title{font-size:13px;color:#888;margin-bottom:6px;text-transform:uppercase;letter-spacing:.5px}
+.question-text{font-size:18px;font-weight:500;margin-bottom:16px;line-height:1.5}
+.fill-input{border:2px solid #e0e0e0;border-radius:8px;padding:8px 12px;font-size:16px;width:100%;outline:none;transition:border .15s}
+.fill-input:focus{border-color:#2d6a4f}
+.fill-input.correct{border-color:#059669;background:#ecfdf5}
+.fill-input.wrong{border-color:#dc2626;background:#fef2f2}
+.options-grid{display:grid;gap:8px}
+.option-btn{padding:12px 16px;border-radius:8px;border:1.5px solid #e0e0e0;background:#fff;cursor:pointer;text-align:left;font-size:15px;transition:all .15s}
+.option-btn:hover:not(:disabled){border-color:#2d6a4f;background:#eaf5ef}
+.option-btn.correct{border-color:#059669;background:#ecfdf5;color:#065f46}
+.option-btn.wrong{border-color:#dc2626;background:#fef2f2;color:#991b1b}
+.feedback{padding:10px 14px;border-radius:8px;font-size:14px;margin-top:10px;font-weight:500}
+.feedback.correct{background:#d1fae5;color:#065f46}
+.feedback.wrong{background:#fee2e2;color:#991b1b}
+.typing-input{border:2px solid #e0e0e0;border-radius:8px;padding:10px 14px;font-size:16px;width:100%;outline:none;transition:border .15s;margin-top:8px}
+.typing-input:focus{border-color:#2d6a4f}
+.listening-box{background:#f0f7f4;border-radius:10px;padding:16px;text-align:center;margin-bottom:12px}
+.play-btn{width:56px;height:56px;border-radius:50%;background:#2d6a4f;border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;margin:0 auto 8px;transition:all .15s}
+.play-btn:hover{background:#1e4d38;transform:scale(1.05)}
+.play-btn svg{fill:#fff}
+.modal{position:fixed;inset:0;background:rgba(0,0,0,.4);display:flex;align-items:center;justify-content:center;z-index:100;padding:16px}
+.modal-box{background:#fff;border-radius:16px;padding:24px;max-width:500px;width:100%;max-height:80vh;overflow-y:auto}
+.modal-title{font-size:18px;font-weight:600;margin-bottom:16px}
+.input-field{width:100%;border:1.5px solid #e0e0e0;border-radius:8px;padding:8px 12px;font-size:14px;outline:none;margin-bottom:8px}
+.input-field:focus{border-color:#2d6a4f}
+.stat-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:16px}
+.stat-box{background:#f0f7f4;border-radius:10px;padding:12px;text-align:center}
+.stat-num{font-size:24px;font-weight:700;color:#2d6a4f}
+.stat-lbl{font-size:12px;color:#666;margin-top:2px}
+.lesson-list{display:grid;gap:8px}
+.lesson-item{display:flex;align-items:center;gap:10px;padding:12px;border:1.5px solid #e0e0e0;border-radius:10px;cursor:pointer;background:#fff;transition:all .15s}
+.lesson-item:hover{border-color:#2d6a4f;background:#eaf5ef}
+.lesson-item.completed{border-color:#059669;background:#ecfdf5}
+.lesson-icon{width:36px;height:36px;border-radius:8px;background:#d1fae5;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0}
+.lesson-item.completed .lesson-icon{background:#059669;color:#fff}
+.nav-back{display:flex;align-items:center;gap:6px;color:#2d6a4f;cursor:pointer;font-size:14px;font-weight:500;margin-bottom:16px;border:none;background:none;padding:0}
+.nav-back:hover{opacity:.75}
+.result-screen{text-align:center;padding:32px 16px}
+.result-emoji{font-size:64px;margin-bottom:12px}
+.result-title{font-size:24px;font-weight:700;margin-bottom:8px}
+.result-score{font-size:48px;font-weight:800;color:#2d6a4f;margin:12px 0}
+.url-import{display:flex;gap:6px}
+.url-import input{flex:1}
+#dropzone{border:2px dashed #b0c9be;border-radius:10px;padding:24px;text-align:center;cursor:pointer;transition:all .15s;margin-bottom:12px;color:#666}
+#dropzone:hover,#dropzone.drag{border-color:#2d6a4f;background:#eaf5ef}
+.tag{display:inline-block;padding:3px 8px;border-radius:6px;font-size:11px;background:#dbeafe;color:#1e40af;margin:2px}
+</style>
+</head>
+<body>
+<div id="app">
+
+<!-- ===== HOME SCREEN ===== -->
+<div id="screen-home" class="screen active">
+  <header>
+    <div class="logo">L</div>
+    <h1>LinguaLeaf</h1>
+    <div style="margin-left:auto;display:flex;gap:6px">
+      <button class="btn btn-outline" onclick="openImport()">+ コース追加</button>
+      <button class="btn btn-secondary" onclick="showScreen('screen-progress')">進捗</button>
+    </div>
+  </header>
+  <div id="course-list"></div>
+  <div id="no-courses" style="display:none;text-align:center;padding:40px 16px">
+    <div style="font-size:48px;margin-bottom:12px">📚</div>
+    <p style="color:#666;margin-bottom:16px">コースがありません。<br>.llcファイルを追加して始めましょう！</p>
+    <button class="btn btn-primary" onclick="openImport()">+ コースを追加する</button>
+  </div>
+</div>
+
+<!-- ===== COURSE SCREEN ===== -->
+<div id="screen-course" class="screen">
+  <header>
+    <div class="logo">L</div>
+    <h1 id="course-title-header">コース</h1>
+  </header>
+  <button class="nav-back" onclick="showScreen('screen-home')">← ホームに戻る</button>
+  <div class="stat-grid">
+    <div class="stat-box"><div class="stat-num" id="stat-completed">0</div><div class="stat-lbl">完了</div></div>
+    <div class="stat-box"><div class="stat-num" id="stat-total">0</div><div class="stat-lbl">レッスン数</div></div>
+    <div class="stat-box"><div class="stat-num" id="stat-pct">0%</div><div class="stat-lbl">達成率</div></div>
+  </div>
+  <div class="lesson-list" id="lesson-list"></div>
+</div>
+
+<!-- ===== LESSON SCREEN ===== -->
+<div id="screen-lesson" class="screen">
+  <header>
+    <div class="logo">L</div>
+    <h1 id="lesson-title-header">レッスン</h1>
+  </header>
+  <button class="nav-back" onclick="showScreen('screen-course')">← コースに戻る</button>
+  <div id="question-counter" style="font-size:13px;color:#888;margin-bottom:12px"></div>
+  <div class="progress-bar" style="margin-bottom:16px"><div class="progress-fill" id="lesson-progress" style="width:0%"></div></div>
+  <div id="activity-container"></div>
+  <div id="feedback-box"></div>
+  <div style="margin-top:12px;display:flex;gap:8px" id="action-bar"></div>
+</div>
+
+<!-- ===== RESULT SCREEN ===== -->
+<div id="screen-result" class="screen">
+  <div class="result-screen">
+    <div class="result-emoji" id="result-emoji">🎉</div>
+    <div class="result-title" id="result-title">レッスン完了！</div>
+    <div class="result-score" id="result-score">100点</div>
+    <p style="color:#666;margin-bottom:20px" id="result-detail"></p>
+    <div style="display:flex;gap:8px;justify-content:center">
+      <button class="btn btn-primary" onclick="showScreen('screen-course')">コースに戻る</button>
+      <button class="btn btn-outline" id="btn-next-lesson" onclick="startNextLesson()">次のレッスン →</button>
+    </div>
+  </div>
+</div>
+
+<!-- ===== PROGRESS SCREEN ===== -->
+<div id="screen-progress" class="screen">
+  <header><div class="logo">L</div><h1>学習進捗</h1></header>
+  <button class="nav-back" onclick="showScreen('screen-home')">← ホームに戻る</button>
+  <div id="progress-content"></div>
+</div>
+
+<!-- ===== IMPORT MODAL ===== -->
+<div id="modal-import" class="modal" style="display:none" onclick="closeImportOnBg(event)">
+  <div class="modal-box">
+    <div class="modal-title">📦 コースを追加</div>
+    <div class="tab-bar">
+      <div class="tab active" onclick="switchImportTab('file',this)">ファイル</div>
+      <div class="tab" onclick="switchImportTab('url',this)">URL</div>
+      <div class="tab" onclick="switchImportTab('sample',this)">サンプル</div>
+    </div>
+    <div id="import-file">
+      <div id="dropzone" onclick="document.getElementById('file-input').click()" ondragover="event.preventDefault();this.classList.add('drag')" ondragleave="this.classList.remove('drag')" ondrop="handleDrop(event)">
+        <div style="font-size:32px;margin-bottom:8px">📂</div>
+        <p>.llcファイルをドロップ、またはクリックして選択</p>
+        <p style="font-size:12px;color:#aaa;margin-top:4px">JSON形式 (.llc)</p>
+      </div>
+      <input type="file" id="file-input" accept=".llc,.json" style="display:none" onchange="handleFileInput(this)">
+    </div>
+    <div id="import-url" style="display:none">
+      <p style="font-size:13px;color:#666;margin-bottom:8px">URLから.llcファイルを読み込みます</p>
+      <div class="url-import">
+        <input class="input-field" id="url-input" placeholder="https://example.com/course.llc" style="margin:0">
+        <button class="btn btn-primary" onclick="importFromUrl()">読込</button>
+      </div>
+      <p style="font-size:12px;color:#aaa;margin-top:6px">※ CORSが許可されているURLのみ対応</p>
+    </div>
+    <div id="import-sample" style="display:none">
+      <p style="font-size:13px;color:#666;margin-bottom:10px">サンプルコースを読み込んでお試しいただけます</p>
+      <div style="display:grid;gap:8px">
+        <div class="card" style="cursor:pointer" onclick="loadSample('en_jp')">
+          <div style="font-weight:500">🇯🇵 日本語 → 英語 基礎</div>
+          <div style="font-size:12px;color:#888;margin-top:4px">挨拶・数字・日常会話 / 10レッスン</div>
+        </div>
+        <div class="card" style="cursor:pointer" onclick="loadSample('es_jp')">
+          <div style="font-weight:500">🇪🇸 スペイン語 基礎</div>
+          <div style="font-size:12px;color:#888;margin-top:4px">基本単語・フレーズ / 6レッスン</div>
+        </div>
+      </div>
+    </div>
+    <div id="import-error" style="display:none;color:#dc2626;font-size:13px;padding:8px;background:#fef2f2;border-radius:6px;margin-top:8px"></div>
+    <div style="margin-top:16px;text-align:right">
+      <button class="btn btn-secondary" onclick="closeImport()">閉じる</button>
+    </div>
+  </div>
+</div>
+
+<script>
+// ====== STATE ======
+let courses = [];
+let progress = {};
+let currentCourse = null;
+let currentLesson = null;
+let currentQ = 0;
+let answers = [];
+let speaking = false;
+
+// ====== STORAGE ======
+async function saveProgress(){try{await window.storage.set('ll_progress',JSON.stringify(progress))}catch(e){}}
+async function loadProgress(){try{const r=await window.storage.get('ll_progress');if(r)progress=JSON.parse(r.value)}catch(e){}}
+async function saveCourses(){try{await window.storage.set('ll_courses',JSON.stringify(courses))}catch(e){}}
+async function loadCourses(){try{const r=await window.storage.get('ll_courses');if(r)courses=JSON.parse(r.value)}catch(e){}}
+
+// ====== INIT ======
+(async()=>{
+  await loadProgress();
+  await loadCourses();
+  renderHome();
+})();
+
+// ====== SCREEN ======
+function showScreen(id){
+  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  if(id==='screen-home')renderHome();
+  if(id==='screen-progress')renderProgress();
+}
+
+// ====== HOME ======
+function renderHome(){
+  const list=document.getElementById('course-list');
+  const empty=document.getElementById('no-courses');
+  if(!courses.length){list.innerHTML='';empty.style.display='block';return}
+  empty.style.display='none';
+  list.innerHTML=courses.map((c,i)=>{
+    const prog=progress[c.id]||{};
+    const done=c.lessons.filter(l=>prog[l.id]?.completed).length;
+    const pct=c.lessons.length?Math.round(done/c.lessons.length*100):0;
+    return`<div class="card course-card" onclick="openCourse(${i})">
+      <div style="display:flex;align-items:center;gap:10px">
+        <div style="font-size:28px">${c.icon||'📖'}</div>
+        <div style="flex:1">
+          <div style="font-weight:600;font-size:16px">${esc(c.name)}</div>
+          <div style="font-size:13px;color:#888;margin:2px 0">${esc(c.description||'')}</div>
+          <div style="font-size:12px;color:#2d6a4f;margin-top:4px">${done}/${c.lessons.length} レッスン完了</div>
+        </div>
+        <span class="badge">${pct}%</span>
+      </div>
+      <div class="progress-bar" style="margin-top:8px"><div class="progress-fill" style="width:${pct}%"></div></div>
+    </div>`}).join('');
+}
+
+// ====== COURSE ======
+function openCourse(i){
+  currentCourse=i;
+  const c=courses[i];
+  document.getElementById('course-title-header').textContent=c.name;
+  const prog=progress[c.id]||{};
+  const done=c.lessons.filter(l=>prog[l.id]?.completed).length;
+  document.getElementById('stat-completed').textContent=done;
+  document.getElementById('stat-total').textContent=c.lessons.length;
+  document.getElementById('stat-pct').textContent=Math.round(done/c.lessons.length*100)+'%';
+  const icons={'fill':'✏️','listening':'🎧','typing':'⌨️','mixed':'📚'};
+  document.getElementById('lesson-list').innerHTML=c.lessons.map((l,j)=>{
+    const lp=prog[l.id]||{};
+    const cls=lp.completed?'lesson-item completed':'lesson-item';
+    const score=lp.score!=null?` · ${lp.score}点`:'';
+    return`<div class="${cls}" onclick="startLesson(${j})">
+      <div class="lesson-icon">${lp.completed?'✓':(icons[l.type]||'📝')}</div>
+      <div style="flex:1">
+        <div style="font-weight:500">${esc(l.title)}</div>
+        <div style="font-size:12px;color:#888">${l.questions.length}問${score}</div>
+      </div>
+      <div style="font-size:12px;color:#888">${l.type||'mixed'}</div>
+    </div>`}).join('');
+  showScreen('screen-course');
+}
+
+// ====== LESSON ======
+function startLesson(j){
+  const c=courses[currentCourse];
+  currentLesson=j;
+  currentQ=0;
+  answers=[];
+  renderQuestion();
+  showScreen('screen-lesson');
+  document.getElementById('lesson-title-header').textContent=c.lessons[j].title;
+}
+
+function renderQuestion(){
+  const c=courses[currentCourse];
+  const lesson=c.lessons[currentLesson];
+  const q=lesson.questions[currentQ];
+  const total=lesson.questions.length;
+  document.getElementById('question-counter').textContent=`${currentQ+1} / ${total}`;
+  document.getElementById('lesson-progress').style.width=`${(currentQ/total)*100}%`;
+  document.getElementById('feedback-box').innerHTML='';
+  document.getElementById('action-bar').innerHTML='';
+  const container=document.getElementById('activity-container');
+  if(q.type==='fill')renderFill(q,container);
+  else if(q.type==='listening')renderListening(q,container);
+  else if(q.type==='typing')renderTyping(q,container);
+  else renderFill(q,container);
+}
+
+function renderFill(q,c){
+  c.innerHTML=`<div class="activity-card">
+    <div class="activity-title">穴埋め問題</div>
+    <div class="question-text">${esc(q.question)}</div>
+    <div class="options-grid">${q.options.map((o,i)=>`<button class="option-btn" onclick="checkFill(${i},${JSON.stringify(q.answer===i)},'${esc(q.explanation||'')}')">${esc(o)}</button>`).join('')}</div>
+  </div>`;
+}
+
+function checkFill(i,correct,exp){
+  document.querySelectorAll('.option-btn').forEach((b,j)=>{
+    b.disabled=true;
+    if(j===i)b.classList.add(correct?'correct':'wrong');
+  });
+  const fb=document.getElementById('feedback-box');
+  fb.innerHTML=`<div class="feedback ${correct?'correct':'wrong'}">${correct?'✓ 正解！':'✗ 不正解'}${exp?` — ${exp}`:''}</div>`;
+  answers.push(correct);
+  document.getElementById('action-bar').innerHTML=`<button class="btn btn-primary" style="flex:1" onclick="nextQ()">次へ →</button>`;
+}
+
+function renderListening(q,c){
+  c.innerHTML=`<div class="activity-card">
+    <div class="activity-title">リスニング練習</div>
+    <div class="listening-box">
+      <button class="play-btn" onclick="speak('${esc(q.audio_text||q.question)}','${q.lang||'en-US'}')">
+        <svg width="20" height="20" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+      </button>
+      <div style="font-size:13px;color:#2d6a4f">再生して聞いてください</div>
+    </div>
+    <div class="options-grid">${q.options.map((o,i)=>`<button class="option-btn" onclick="checkFill(${i},${JSON.stringify(q.answer===i)},'${esc(q.explanation||'')}')">${esc(o)}</button>`).join('')}</div>
+  </div>`;
+}
+
+function speak(text,lang){
+  if(!window.speechSynthesis)return;
+  speechSynthesis.cancel();
+  const u=new SpeechSynthesisUtterance(text);
+  u.lang=lang||'en-US';
+  speechSynthesis.speak(u);
+}
+
+function renderTyping(q,c){
+  c.innerHTML=`<div class="activity-card">
+    <div class="activity-title">タイピング練習</div>
+    <div class="question-text">${esc(q.question)}</div>
+    ${q.hint?`<div style="font-size:13px;color:#888;margin-bottom:8px">ヒント: ${esc(q.hint)}</div>`:''}
+    <input class="typing-input" id="typing-ans" placeholder="ここに入力..." autocomplete="off" onkeydown="if(event.key==='Enter')checkTyping()">
+    <button class="btn btn-primary" style="margin-top:10px" onclick="checkTyping()">確認</button>
+  </div>`;
+  setTimeout(()=>{const el=document.getElementById('typing-ans');if(el)el.focus()},100);
+}
+
+function checkTyping(){
+  const el=document.getElementById('typing-ans');
+  if(!el)return;
+  const q=courses[currentCourse].lessons[currentLesson].questions[currentQ];
+  const val=el.value.trim().toLowerCase();
+  const correct=Array.isArray(q.answer)?q.answer.map(a=>a.toLowerCase()).includes(val):val===String(q.answer).toLowerCase();
+  el.classList.add(correct?'correct':'wrong');
+  el.disabled=true;
+  const fb=document.getElementById('feedback-box');
+  fb.innerHTML=`<div class="feedback ${correct?'correct':'wrong'}">${correct?'✓ 正解！':'✗ 不正解 — 正解: '+esc(Array.isArray(q.answer)?q.answer[0]:q.answer)}${q.explanation?` — ${q.explanation}`:''}</div>`;
+  answers.push(correct);
+  document.getElementById('action-bar').innerHTML=`<button class="btn btn-primary" style="flex:1" onclick="nextQ()">次へ →</button>`;
+}
+
+function nextQ(){
+  const lesson=courses[currentCourse].lessons[currentLesson];
+  if(currentQ+1>=lesson.questions.length){finishLesson();return}
+  currentQ++;
+  renderQuestion();
+}
+
+function finishLesson(){
+  const c=courses[currentCourse];
+  const lesson=c.lessons[currentLesson];
+  const correct=answers.filter(Boolean).length;
+  const total=answers.length;
+  const score=Math.round(correct/total*100);
+  if(!progress[c.id])progress[c.id]={};
+  progress[c.id][lesson.id]={completed:true,score,date:new Date().toISOString()};
+  saveProgress();
+  const emojis={100:'🏆',80:'🎉',60:'👍',0:'💪'};
+  const emoji=Object.entries(emojis).reverse().find(([k])=>score>=+k)[1];
+  document.getElementById('result-emoji').textContent=emoji;
+  document.getElementById('result-title').textContent=score===100?'パーフェクト！':'レッスン完了！';
+  document.getElementById('result-score').textContent=score+'点';
+  document.getElementById('result-detail').textContent=`${correct}/${total}問正解`;
+  const hasNext=currentLesson+1<c.lessons.length;
+  document.getElementById('btn-next-lesson').style.display=hasNext?'':'none';
+  showScreen('screen-result');
+}
+
+function startNextLesson(){
+  startLesson(currentLesson+1);
+}
+
+// ====== PROGRESS ======
+function renderProgress(){
+  const c=document.getElementById('progress-content');
+  if(!courses.length){c.innerHTML='<p style="color:#888;text-align:center;padding:40px">まだコースがありません</p>';return}
+  c.innerHTML=courses.map(course=>{
+    const prog=progress[course.id]||{};
+    const lessons=course.lessons.map(l=>{
+      const lp=prog[l.id];
+      return`<div style="display:flex;justify-content:space-between;align-items:center;padding:6px 0;border-bottom:1px solid #f0f0f0;font-size:13px">
+        <span>${esc(l.title)}</span>
+        <span style="color:${lp?.completed?'#059669':'#aaa'}">${lp?.completed?lp.score+'点':'未完了'}</span>
+      </div>`;
+    }).join('');
+    const done=course.lessons.filter(l=>prog[l.id]?.completed).length;
+    const pct=course.lessons.length?Math.round(done/course.lessons.length*100):0;
+    return`<div class="card"><div style="font-weight:600;margin-bottom:4px">${esc(course.name)}</div>
+      <div class="progress-bar"><div class="progress-fill" style="width:${pct}%"></div></div>
+      <div style="font-size:12px;color:#888;margin:4px 0 10px">${done}/${course.lessons.length} 完了 (${pct}%)</div>
+      ${lessons}</div>`;
+  }).join('');
+}
+
+// ====== IMPORT ======
+function openImport(){document.getElementById('modal-import').style.display='flex'}
+function closeImport(){document.getElementById('modal-import').style.display='none'}
+function closeImportOnBg(e){if(e.target===document.getElementById('modal-import'))closeImport()}
+
+function switchImportTab(tab,el){
+  document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
+  el.classList.add('active');
+  ['file','url','sample'].forEach(t=>document.getElementById('import-'+t).style.display=t===tab?'block':'none');
+}
+
+function handleDrop(e){
+  e.preventDefault();
+  document.getElementById('dropzone').classList.remove('drag');
+  const file=e.dataTransfer.files[0];
+  if(file)readFile(file);
+}
+function handleFileInput(input){if(input.files[0])readFile(input.files[0])}
+function readFile(file){
+  const r=new FileReader();
+  r.onload=e=>{try{parseCourse(JSON.parse(e.target.result))}catch(err){showImportError('JSONパースエラー: '+err.message)}}
+  r.readAsText(file);
+}
+
+async function importFromUrl(){
+  const url=document.getElementById('url-input').value.trim();
+  if(!url)return;
+  try{
+    const res=await fetch(url);
+    const json=await res.json();
+    parseCourse(json);
+  }catch(e){showImportError('URL読み込みエラー: '+e.message)}
+}
+
+function parseCourse(data){
+  if(!data.id||!data.name||!Array.isArray(data.lessons)){showImportError('無効な.llcファイルです。id, name, lessonsが必要です');return}
+  const existing=courses.findIndex(c=>c.id===data.id);
+  if(existing>=0)courses[existing]=data;else courses.push(data);
+  saveCourses();
+  closeImport();
+  renderHome();
+}
+
+function showImportError(msg){
+  const el=document.getElementById('import-error');
+  el.textContent=msg;el.style.display='block';
+  setTimeout(()=>el.style.display='none',4000);
+}
+
+// ====== SAMPLE DATA ======
+function loadSample(id){
+  const samples={
+    en_jp:{
+      id:'sample_en_jp',name:'英語基礎コース',icon:'🇬🇧',description:'日常英会話の基本を学ぼう',
+      lessons:[
+        {id:'l1',title:'挨拶',type:'fill',questions:[
+          {type:'fill',question:'「こんにちは」は英語で？',options:['Hello','Goodbye','Thank you','Sorry'],answer:0},
+          {type:'fill',question:'「おやすみなさい」は？',options:['Good morning','Good night','Good afternoon','Hello'],answer:1,explanation:'Good nightは就寝時の挨拶'},
+          {type:'fill',question:'「ありがとう」は？',options:['Sorry','Please','Thank you','Excuse me'],answer:2}
+        ]},
+        {id:'l2',title:'数字',type:'typing',questions:[
+          {type:'typing',question:'「1」を英語で書いてください',answer:['one','One'],hint:'o○e'},
+          {type:'typing',question:'「5」を英語で書いてください',answer:['five','Five']},
+          {type:'typing',question:'「10」を英語で書いてください',answer:['ten','Ten']}
+        ]},
+        {id:'l3',title:'リスニング：動物',type:'listening',questions:[
+          {type:'listening',question:'流れる音声は何と言っていますか？',audio_text:'Cat',lang:'en-US',options:['Cat','Dog','Bird','Fish'],answer:0},
+          {type:'listening',question:'流れる音声は何と言っていますか？',audio_text:'Elephant',lang:'en-US',options:['Lion','Tiger','Elephant','Monkey'],answer:2},
+          {type:'listening',question:'流れる音声は何と言っていますか？',audio_text:'Apple',lang:'en-US',options:['Orange','Apple','Banana','Grape'],answer:1}
+        ]}
+      ]
+    },
+    es_jp:{
+      id:'sample_es_jp',name:'スペイン語基礎',icon:'🇪🇸',description:'基本的なスペイン語を学ぼう',
+      lessons:[
+        {id:'l1',title:'挨拶',type:'fill',questions:[
+          {type:'fill',question:'「こんにちは」はスペイン語で？',options:['Hola','Adios','Gracias','Lo siento'],answer:0},
+          {type:'fill',question:'「ありがとう」は？',options:['Por favor','De nada','Gracias','Perdón'],answer:2},
+          {type:'fill',question:'「さようなら」は？',options:['Hola','Buenos días','Adiós','Buenas noches'],answer:2}
+        ]},
+        {id:'l2',title:'数字',type:'typing',questions:[
+          {type:'typing',question:'「1」をスペイン語で書いてください',answer:['uno','Uno']},
+          {type:'typing',question:'「2」をスペイン語で書いてください',answer:['dos','Dos']},
+          {type:'typing',question:'「3」をスペイン語で書いてください',answer:['tres','Tres']}
+        ]}
+      ]
+    }
+  };
+  parseCourse(samples[id]);
+}
+
+function esc(s){return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;')}
+</script>
+</body>
+</html>
