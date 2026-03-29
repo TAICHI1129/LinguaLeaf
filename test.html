@@ -20,7 +20,21 @@ header h1{font-size:22px;font-weight:600;color:#2d6a4f}
 .btn-sm{padding:4px 10px;font-size:12px}
 .card{background:#fff;border-radius:12px;padding:16px;margin-bottom:12px;border:1px solid #e8e8e8}
 .course-card{cursor:pointer;transition:all .15s;position:relative}.course-card:hover{border-color:#2d6a4f;box-shadow:0 2px 8px rgba(45,106,79,.12)}
-.course-delete-btn{position:absolute;top:12px;right:12px;background:#fff;border:1.5px solid #dc2626;color:#dc2626;padding:4px 10px;border-radius:6px;font-size:12px;cursor:pointer;opacity:0;transition:all .15s;z-index:10}
+.course-delete-btn{
+  position:absolute;
+  bottom:12px; /* ←ここだけ変更 */
+  right:12px;
+  background:#fff;
+  border:1.5px solid #dc2626;
+  color:#dc2626;
+  padding:4px 10px;
+  border-radius:6px;
+  font-size:12px;
+  cursor:pointer;
+  opacity:0;
+  transition:all .15s;
+  z-index:10
+}
 .course-card:hover .course-delete-btn{opacity:1}
 .course-delete-btn:hover{background:#fef2f2}
 .badge{display:inline-block;padding:2px 8px;border-radius:20px;font-size:11px;font-weight:600;background:#d1fae5;color:#065f46}
