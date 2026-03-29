@@ -11,7 +11,7 @@ GitHub Pages版: https://taichi1129.github.io/LinguaLeaf/
 LLC(Learn Language Course)ファイルを使用します。
 拡張子は.llcですが、.jsonでも正常に動作します。
 中身はJSON構文です。
-詳しくはguide.mdを参照してください。
+詳しくは[guide.md](guide.md)を参照してください。
 
 例:
 `````LLC
