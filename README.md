@@ -4,6 +4,10 @@
 **LinguaLeaf** は、言語学習コースをオンラインで公開・学習できる  Webアプリケーション プロジェクトです。 
 
 ## コースの作り方
+LLC(Learn Language Course)ファイルを使用します。
+拡張子は.llcですが、.jsonとしても正常に動作します。
+
+例:
 `````LLC
 {
   "id": "my_course_01",
