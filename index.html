@@ -164,7 +164,7 @@ header h1{font-size:22px;font-weight:600;color:#2d6a4f}
         ondragleave="this.classList.remove('drag')" ondrop="handleDrop(event)">
         <div style="font-size:32px;margin-bottom:8px">📂</div>
         <p>.llcファイルをドロップ、またはクリックして選択</p>
-        <p style="font-size:12px;color:#aaa;margin-top:4px">JSON形式 (.llc)</p>
+        <p style="font-size:12px;color:#aaa;margin-top:4px">LLC形式</p>
       </div>
       <input type="file" id="file-input" accept=".llc,.json" style="display:none" onchange="handleFileInput(this)">
     </div>
@@ -182,11 +182,11 @@ header h1{font-size:22px;font-weight:600;color:#2d6a4f}
       <p style="font-size:13px;color:#666;margin-bottom:10px">サンプルコースを読み込んでお試しいただけます</p>
       <div style="display:grid;gap:8px">
         <div class="card" style="cursor:pointer" onclick="loadSample('en_jp')">
-          <div style="font-weight:500">🇬🇧 英語基礎（TTS読み上げ）</div>
+          <div style="font-weight:500">🇬🇧 英語基礎</div>
           <div style="font-size:12px;color:#888;margin-top:4px">挨拶・数字・リスニング / 3レッスン</div>
         </div>
         <div class="card" style="cursor:pointer" onclick="loadSample('es_jp')">
-          <div style="font-weight:500">🇪🇸 スペイン語基礎（TTS読み上げ）</div>
+          <div style="font-weight:500">🇪🇸 スペイン語基礎</div>
           <div style="font-size:12px;color:#888;margin-top:4px">基本単語・フレーズ / 2レッスン</div>
         </div>
       </div>
