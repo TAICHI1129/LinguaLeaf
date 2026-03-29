@@ -192,26 +192,34 @@ header h1{font-size:22px;font-weight:600;color:#2d6a4f}
       </div>
     </div>
 
-    <div id="import-format" style="display:none">
-      <p style="font-size:13px;color:#444;font-weight:500;margin-bottom:6px">リスニング問題の音声指定方法</p>
-      <p style="font-size:13px;color:#666;margin-bottom:8px">優先順位: <strong>audio_url</strong>（音声ファイル）→ <strong>audio_text</strong>（TTS読み上げ）</p>
-      <div class="code-block">{
-  "type": "listening",
-  "question": "音声を聞いて答えてください",
-
-  <span style="color:#059669">// ① 音声ファイルURL（MP3/WAV/OGGなど）</span>
-  "audio_url": "https://example.com/audio/hello.mp3",
-
-  <span style="color:#2563eb">// ② TTSフォールバック（URLが使えない場合）</span>
-  "audio_text": "Hello",
-  "lang": "en-US",
-
-  "options": ["Hello","Goodbye","Thanks","Sorry"],
-  "answer": 0,
-  "explanation": "解説（任意）"
-}</div>
-      <p style="font-size:12px;color:#888;margin-top:10px">audio_urlが設定されている場合はそちらを優先再生します。<br>失敗した場合は自動的にTTSにフォールバックします。</p>
-    </div>
+&lt;div id="import-format" style="display:none"&gt;<br>
+&nbsp;&nbsp;&lt;p style="font-size:13px;color:#444;font-weight:500;margin-bottom:6px"&gt;リスニング問題の音声指定方法&lt;/p&gt;<br>
+<br>
+&nbsp;&nbsp;&lt;p style="font-size:13px;color:#666;margin-bottom:8px"&gt;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;優先順位: &lt;strong&gt;audio_url&lt;/strong&gt;（音声ファイル）→ &lt;strong&gt;audio_text&lt;/strong&gt;（TTS読み上げ）<br>
+&nbsp;&nbsp;&lt;/p&gt;<br>
+<br>
+&nbsp;&nbsp;&lt;div class="code-block"&gt;{<br>
+&nbsp;&nbsp;&nbsp;&nbsp;"type": "listening",<br>
+&nbsp;&nbsp;&nbsp;&nbsp;"question": "音声を聞いて答えてください",<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;// ① 音声ファイルURL（MP3/WAV/OGGなど）<br>
+&nbsp;&nbsp;&nbsp;&nbsp;"audio_url": "https://example.com/audio/hello.mp3",<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;// ② TTSフォールバック（URLが使えない場合）<br>
+&nbsp;&nbsp;&nbsp;&nbsp;"audio_text": "Hello",<br>
+&nbsp;&nbsp;&nbsp;&nbsp;"lang": "en-US",<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;"options": ["Hello","Goodbye","Thanks","Sorry"],<br>
+&nbsp;&nbsp;&nbsp;&nbsp;"answer": 0,<br>
+&nbsp;&nbsp;&nbsp;&nbsp;"explanation": "解説（任意）"<br>
+}&lt;/div&gt;<br>
+<br>
+&nbsp;&nbsp;&lt;p style="font-size:12px;color:#888;margin-top:10px"&gt;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;audio_urlが設定されている場合はそちらを優先再生します。&lt;br&gt;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;失敗した場合は自動的にTTSにフォールバックします。<br>
+&nbsp;&nbsp;&lt;/p&gt;<br>
+&lt;/div&gt;
 
     <div id="import-error" style="display:none;color:#dc2626;font-size:13px;padding:8px;background:#fef2f2;border-radius:6px;margin-top:8px"></div>
     <div style="margin-top:16px;text-align:right">
