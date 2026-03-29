@@ -6,4 +6,4 @@
 ## 📄 ライセンス
 
 MIT License  
-詳細は [LICENSE] を参照してください。
+詳細は [LICENSE](LICENSE) を参照してください。
