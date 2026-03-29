@@ -158,68 +158,75 @@ header h1{font-size:22px;font-weight:600;color:#2d6a4f}
       <div class="tab" onclick="switchImportTab('format',this)">形式</div>
     </div>
 
-    <div id="import-file">
-      <div id="dropzone" onclick="document.getElementById('file-input').click()"
-        ondragover="event.preventDefault();this.classList.add('drag')"
-        ondragleave="this.classList.remove('drag')" ondrop="handleDrop(event)">
-        <div style="font-size:32px;margin-bottom:8px">📂</div>
-        <p>.llcファイルをドロップ、またはクリックして選択</p>
-        <p style="font-size:12px;color:#aaa;margin-top:4px">LLC形式</p>
-      </div>
-      <input type="file" id="file-input" accept=".llc,.json" style="display:none" onchange="handleFileInput(this)">
-    </div>
+<div id="import-file">
+  <div id="dropzone" onclick="document.getElementById('file-input').click()"
+    ondragover="event.preventDefault();this.classList.add('drag')"
+    ondragleave="this.classList.remove('drag')" ondrop="handleDrop(event)">
+    <div style="font-size:32px;margin-bottom:8px">📂</div>
+    <p>.llcファイルをドロップ、またはクリックして選択</p>
+    <p style="font-size:12px;color:#aaa;margin-top:4px">LLC形式</p>
+  </div>
+  <input type="file" id="file-input" accept=".llc,.json" style="display:none" onchange="handleFileInput(this)">
+</div>
 
-    <div id="import-url" style="display:none">
-      <p style="font-size:13px;color:#666;margin-bottom:8px">URLから.llcファイルを読み込みます</p>
-      <div class="url-import">
-        <input class="input-field" id="url-input" placeholder="https://example.com/course.llc" style="margin:0">
-        <button class="btn btn-primary" onclick="importFromUrl()">読込</button>
-      </div>
-      <p style="font-size:12px;color:#aaa;margin-top:6px">※ CORSが許可されているURLのみ対応</p>
-    </div>
+<div id="import-url" style="display:none">
+  <p style="font-size:13px;color:#666;margin-bottom:8px">URLから.llcファイルを読み込みます</p>
+  <div class="url-import">
+    <input class="input-field" id="url-input" placeholder="https://example.com/course.llc" style="margin:0">
+    <button class="btn btn-primary" onclick="importFromUrl()">読込</button>
+  </div>
+  <p style="font-size:12px;color:#aaa;margin-top:6px">※ CORSが許可されているURLのみ対応</p>
+</div>
 
-    <div id="import-sample" style="display:none">
-      <p style="font-size:13px;color:#666;margin-bottom:10px">サンプルコースを読み込んでお試しいただけます</p>
-      <div style="display:grid;gap:8px">
-        <div class="card" style="cursor:pointer" onclick="loadSample('en_jp')">
-          <div style="font-weight:500">🇬🇧 英語基礎</div>
-          <div style="font-size:12px;color:#888;margin-top:4px">挨拶・数字・リスニング / 3レッスン</div>
-        </div>
-        <div class="card" style="cursor:pointer" onclick="loadSample('es_jp')">
-          <div style="font-weight:500">🇪🇸 スペイン語基礎</div>
-          <div style="font-size:12px;color:#888;margin-top:4px">基本単語・フレーズ / 2レッスン</div>
-        </div>
-      </div>
+<div id="import-sample" style="display:none">
+  <p style="font-size:13px;color:#666;margin-bottom:10px">サンプルコースを読み込んでお試しいただけます</p>
+  <div style="display:grid;gap:8px">
+    <div class="card" style="cursor:pointer" onclick="loadSample('en_jp')">
+      <div style="font-weight:500">🇬🇧 英語基礎</div>
+      <div style="font-size:12px;color:#888;margin-top:4px">挨拶・数字・リスニング / 3レッスン</div>
     </div>
+    <div class="card" style="cursor:pointer" onclick="loadSample('es_jp')">
+      <div style="font-weight:500">🇪🇸 スペイン語基礎</div>
+      <div style="font-size:12px;color:#888;margin-top:4px">基本単語・フレーズ / 2レッスン</div>
+    </div>
+  </div>
+</div>
 
-&lt;div id="import-format" style="display:none"&gt;<br>
-&nbsp;&nbsp;&lt;p style="font-size:13px;color:#444;font-weight:500;margin-bottom:6px"&gt;リスニング問題の音声指定方法&lt;/p&gt;<br>
-<br>
-&nbsp;&nbsp;&lt;p style="font-size:13px;color:#666;margin-bottom:8px"&gt;<br>
-&nbsp;&nbsp;&nbsp;&nbsp;優先順位: &lt;strong&gt;audio_url&lt;/strong&gt;（音声ファイル）→ &lt;strong&gt;audio_text&lt;/strong&gt;（TTS読み上げ）<br>
-&nbsp;&nbsp;&lt;/p&gt;<br>
-<br>
-&nbsp;&nbsp;&lt;div class="code-block"&gt;{<br>
-&nbsp;&nbsp;&nbsp;&nbsp;"type": "listening",<br>
-&nbsp;&nbsp;&nbsp;&nbsp;"question": "音声を聞いて答えてください",<br>
-&nbsp;&nbsp;&nbsp;&nbsp;<br>
-&nbsp;&nbsp;&nbsp;&nbsp;// ① 音声ファイルURL（MP3/WAV/OGGなど）<br>
-&nbsp;&nbsp;&nbsp;&nbsp;"audio_url": "https://example.com/audio/hello.mp3",<br>
-&nbsp;&nbsp;&nbsp;&nbsp;<br>
-&nbsp;&nbsp;&nbsp;&nbsp;// ② TTSフォールバック（URLが使えない場合）<br>
-&nbsp;&nbsp;&nbsp;&nbsp;"audio_text": "Hello",<br>
-&nbsp;&nbsp;&nbsp;&nbsp;"lang": "en-US",<br>
-&nbsp;&nbsp;&nbsp;&nbsp;<br>
-&nbsp;&nbsp;&nbsp;&nbsp;"options": ["Hello","Goodbye","Thanks","Sorry"],<br>
-&nbsp;&nbsp;&nbsp;&nbsp;"answer": 0,<br>
-&nbsp;&nbsp;&nbsp;&nbsp;"explanation": "解説（任意）"<br>
-}&lt;/div&gt;<br>
-<br>
-&nbsp;&nbsp;&lt;p style="font-size:12px;color:#888;margin-top:10px"&gt;<br>
-&nbsp;&nbsp;&nbsp;&nbsp;audio_urlが設定されている場合はそちらを優先再生します。&lt;br&gt;<br>
-&nbsp;&nbsp;&nbsp;&nbsp;失敗した場合は自動的にTTSにフォールバックします。<br>
-&nbsp;&nbsp;&lt;/p&gt;<br>
-&lt;/div&gt;
+<!-- ★ ここを修正：pre/code で安全に表示 ★ -->
+<div id="import-format" style="display:none">
+  <p style="font-size:13px;color:#444;font-weight:500;margin-bottom:6px">リスニング問題の音声指定方法</p>
+
+  <p style="font-size:13px;color:#666;margin-bottom:8px">
+    優先順位: <strong>audio_url</strong>（音声ファイル）→ <strong>audio_text</strong>（TTS読み上げ）
+  </p>
+
+  <pre class="code-block"><code>{
+  "type": "listening",
+  "question": "音声を聞いて答えてください",
+
+  // ① 音声ファイルURL（MP3/WAV/OGGなど）
+  "audio_url": "https://example.com/audio/hello.mp3",
+
+  // ② TTSフォールバック（URLが使えない場合）
+  "audio_text": "Hello",
+  "lang": "en-US",
+
+  "options": ["Hello","Goodbye","Thanks","Sorry"],
+  "answer": 0,
+  "explanation": "解説（任意）"
+}</code></pre>
+
+  <p style="font-size:12px;color:#888;margin-top:10px">
+    audio_urlが設定されている場合はそちらを優先再生します。<br>
+    失敗した場合は自動的にTTSにフォールバックします。
+  </p>
+</div>
+
+<div id="import-error" style="display:none;color:#dc2626;font-size:13px;padding:8px;background:#fef2f2;border-radius:6px;margin-top:8px"></div>
+
+<div style="margin-top:16px;text-align:right">
+  <button class="btn btn-secondary" onclick="closeImport()">閉じる</button>
+</div>
 
     <div id="import-error" style="display:none;color:#dc2626;font-size:13px;padding:8px;background:#fef2f2;border-radius:6px;margin-top:8px"></div>
     <div style="margin-top:16px;text-align:right">
