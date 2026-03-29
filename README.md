@@ -4,7 +4,8 @@
 **LinguaLeaf** は、言語学習コースをオンラインで公開・学習できる  Webアプリケーション プロジェクトです。 
 
 URL: https://lingualeaf.ct.ws/
-GitHub Pages版: aa
+
+GitHub Pages版: https://taichi1129.github.io/LinguaLeaf/
 
 ## コースの作り方
 LLC(Learn Language Course)ファイルを使用します。
