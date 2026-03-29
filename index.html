@@ -224,12 +224,74 @@ header h1{font-size:22px;font-weight:600;color:#2d6a4f}
 let courses=[], progress={}, currentCourse=null, currentLesson=null, currentQ=0, answers=[];
 let currentAudio=null;
 
-async function saveProgress(){try{await window.storage.set('ll_progress',JSON.stringify(progress))}catch(e){}}
-async function loadProgress(){try{const r=await window.storage.get('ll_progress');if(r)progress=JSON.parse(r.value)}catch(e){}}
-async function saveCourses(){try{await window.storage.set('ll_courses',JSON.stringify(courses))}catch(e){}}
-async function loadCourses(){try{const r=await window.storage.get('ll_courses');if(r)courses=JSON.parse(r.value)}catch(e){}}
+// ====== COOKIE UTILITIES ======
+function setCookie(name, value, days = 365) {
+  const date = new Date();
+  date.setTime(date.getTime() + (days * 24 * 60 * 60 * 1000));
+  const expires = "expires=" + date.toUTCString();
+  document.cookie = name + "=" + encodeURIComponent(value) + ";" + expires + ";path=/;SameSite=Lax";
+}
 
-(async()=>{await loadProgress();await loadCourses();renderHome()})();
+function getCookie(name) {
+  const nameEQ = name + "=";
+  const ca = document.cookie.split(';');
+  for (let i = 0; i < ca.length; i++) {
+    let c = ca[i];
+    while (c.charAt(0) === ' ') c = c.substring(1);
+    if (c.indexOf(nameEQ) === 0) {
+      return decodeURIComponent(c.substring(nameEQ.length));
+    }
+  }
+  return null;
+}
+
+// ====== STORAGE FUNCTIONS (Cookie-based) ======
+function saveProgress() {
+  try {
+    setCookie('ll_progress', JSON.stringify(progress));
+  } catch (e) {
+    console.error('Failed to save progress:', e);
+  }
+}
+
+function loadProgress() {
+  try {
+    const data = getCookie('ll_progress');
+    if (data) {
+      progress = JSON.parse(data);
+    }
+  } catch (e) {
+    console.error('Failed to load progress:', e);
+    progress = {};
+  }
+}
+
+function saveCourses() {
+  try {
+    setCookie('ll_courses', JSON.stringify(courses));
+  } catch (e) {
+    console.error('Failed to save courses:', e);
+  }
+}
+
+function loadCourses() {
+  try {
+    const data = getCookie('ll_courses');
+    if (data) {
+      courses = JSON.parse(data);
+    }
+  } catch (e) {
+    console.error('Failed to load courses:', e);
+    courses = [];
+  }
+}
+
+// ====== INITIALIZATION ======
+(function init() {
+  loadProgress();
+  loadCourses();
+  renderHome();
+})();
 
 function showScreen(id){
   stopAudio();
@@ -531,7 +593,7 @@ function loadSample(id){
           {type:'typing',question:'「5」を英語で書いてください',answer:['five','Five']},
           {type:'typing',question:'「10」を英語で書いてください',answer:['ten','Ten']}
         ]},
-        {id:'l3',title:'リスニング：動物',type:'listening',questions:[
+        {id:'l3',title:'リスニング:動物',type:'listening',questions:[
           {type:'listening',question:'音声を聞いて答えてください',audio_text:'Cat',lang:'en-US',options:['Cat','Dog','Bird','Fish'],answer:0},
           {type:'listening',question:'音声を聞いて答えてください',audio_text:'Elephant',lang:'en-US',options:['Lion','Tiger','Elephant','Monkey'],answer:2},
           {type:'listening',question:'音声を聞いて答えてください',audio_text:'Apple',lang:'en-US',options:['Orange','Apple','Banana','Grape'],answer:1}
