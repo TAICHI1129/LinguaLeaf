@@ -14,7 +14,7 @@ LLC(Learn Language Course)ファイルを使用します。
 
 中身はJSON構文です。
 
-TokFormatという簡単な言語からJSONへ[変換](https://lingualeaf.ct.ws/TokFormat_to_LLC.html)することができます。
+TokFormatという言語からJSONへ[変換](https://lingualeaf.ct.ws/TokFormat_to_LLC.html)することができます。
 
 JSONでの記述については[guide.md](guide.md)を参照してください。
 
