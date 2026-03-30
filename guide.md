@@ -118,10 +118,8 @@ LinguaLeafでは、コースは **LLC形式** で作成します。
   "explanation": "主語 + be動詞 + 冠詞 + 名詞"
 }
 ```
-
-word_bank: 選択カード一覧
-
-answer: 正しい並び順（完全一致で正解判定）
+* word_bank: 選択カード一覧
+* answer: 正しい並び順（完全一致で正解判定）
 
 ---
 
