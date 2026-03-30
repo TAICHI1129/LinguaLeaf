@@ -100,12 +100,28 @@ LinguaLeafでは、コースは **LLC形式** で作成します。
 }
 ```
 
-### 音声仕様
+#### 音声仕様
 
 優先順位は以下の通りです：
 
 1. `audio_url`
 2. `audio_text`（TTSを使用）
+
+### 4.4 カード問題(cards)
+
+```json
+{
+  "type": "cards",
+  "question": "カードを並べて文を完成させてください",
+  "word_bank": ["I", "am", "a", "student"],
+  "answer": ["I", "am", "a", "student"],
+  "explanation": "主語 + be動詞 + 冠詞 + 名詞"
+}
+```
+
+word_bank: 選択カード一覧
+
+answer: 正しい並び順（完全一致で正解判定）
 
 ---
 
